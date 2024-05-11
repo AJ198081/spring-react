@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
+<!--    https://github.com/jcgay/maven-profiler-->
     <extension>
         <groupId>fr.jcgay.maven</groupId>
         <artifactId>maven-profiler</artifactId>

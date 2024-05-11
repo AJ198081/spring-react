@@ -1,5 +1,7 @@
 package dev.aj.springreact.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.aj.springreact.domain.model.Student;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ class StudentRestControllerTest {
     }
 
     @Test
-    void hello_returnsStudentAJ() throws Exception {
+    void getDefaultStudent_returnsStudentAJ() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/default-student")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
@@ -70,12 +72,86 @@ class StudentRestControllerTest {
         String grade = "Driver";
         int age = 42;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/{name}/{age}/{grade}", name, age, grade)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/{name}/{age}/{grade}", name, String.valueOf(age), grade)
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                .andExpect(jsonPath("$.name", Matchers.is(name)))
                .andExpect(jsonPath("$.age", Matchers.is(age)))
                .andExpect(jsonPath("$.grade", Matchers.is(grade)));
+    }
+
+    @Test
+    void getStudentByQuery_returnsStudentWithQueryDetails() throws Exception {
+        String name = "Phil";
+        String grade = "GOAT";
+        int age = 40;
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/query")
+                                              .param("name", name)
+                                              .param("age", String.valueOf(age))
+                                              .param("grade", grade)
+                                              .accept(MediaType.APPLICATION_JSON))
+               .andExpect(MockMvcResultMatchers.status().isOk())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is(name)))
+               .andExpect(jsonPath("$.age", Matchers.is(age)))
+               .andExpect(jsonPath("$.grade", Matchers.is(grade)));
+    }
+
+    @Test
+    void createStudent_createsNewStudent() throws Exception {
+        String name = "New Student";
+        String grade = "New Grade";
+        int age = 22;
+
+        Student newStudent = Student.builder()
+                                    .name(name)
+                                    .age(age)
+                                    .grade(grade)
+                                    .build();
+
+        String studentJson = new ObjectMapper().writeValueAsString(newStudent);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/student/create")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(studentJson))
+               .andExpect(status().isOk());
+    }
+
+    @Test
+    void getStudentByName_nonExistingStudent_returnsClientError() throws Exception {
+        String name = "Reet";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/name/{name}", name)
+                                              .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void getStudentByName_ExistingStudent_returnsStudentByName() throws Exception {
+        String name = "New Student";
+        String grade = "New Grade";
+        String age = String.valueOf(22);
+
+        Student newStudent = Student.builder()
+                                    .name(name)
+                                    .age(Integer.parseInt(age))
+                                    .grade(grade)
+                                    .build();
+
+        String studentJson = new ObjectMapper().writeValueAsString(newStudent);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/student/create")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(studentJson))
+               .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/student/name/{name}", name)
+                                              .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().is2xxSuccessful())
+               .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.age", Matchers.is(Integer.parseInt(age))));
+
     }
 }

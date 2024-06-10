@@ -20,3 +20,15 @@ Content-Type: application/json
 ### Get newly created department
 GET {{location-of-created-resource}}
 Accept: application/json
+
+### Get all department
+GET http://localhost:8080/departments/all
+Accept: application/json
+
+### Update Department Name
+PATCH http://localhost:8080/departments/update/99
+Content-Type: application/json
+
+{
+  "departmentDescription": "Technical Department"
+}

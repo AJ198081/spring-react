@@ -24,8 +24,8 @@ import lombok.ToString;
 @Table(name = "employee")
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_generator")
-    @SequenceGenerator(name = "employee_sequence", sequenceName = "employee_id_seq", initialValue = 10, allocationSize = 20)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq_generator")
+    @SequenceGenerator(name = "employee_seq_generator", sequenceName = "employee_id_seq", initialValue = 11, allocationSize = 13)
     private Long id;
     private String lastName;
     private String firstName;

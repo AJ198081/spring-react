@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_generator")
-    @SequenceGenerator(name = "department_generator", sequenceName = "department_sequence", initialValue = 23, allocationSize = 15)
+    @SequenceGenerator(name = "department_generator", sequenceName = "department_id_sequence", initialValue = 23, allocationSize = 15)
     private Long id;
 
     private String departmentName;

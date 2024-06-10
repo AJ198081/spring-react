@@ -15,24 +15,25 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
+        <frontend-maven-plugin.nodeVersion>v20.11.1</frontend-maven-plugin.nodeVersion>
     </properties>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -44,10 +45,6 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -55,7 +52,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.15.0</version>
+                <version>${frontend-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>${project.basedir}/src/main/frontend</workingDirectory>
                     <installDirectory>${project.build.outputDirectory}</installDirectory>
@@ -67,7 +64,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v20.11.1</nodeVersion>
+                            <nodeVersion>${frontend-maven-plugin.nodeVersion}</nodeVersion>
                         </configuration>
                     </execution>
                     <execution>
@@ -76,7 +73,8 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --omit=dev --legacy-peer-deps</arguments>
+                            <!--<arguments>install &#45;&#45;omit=dev &#45;&#45;legacy-peer-deps</arguments>-->
+                            <arguments>install</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -94,7 +92,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>position-vite-build</id>
+                        <id>add-vite-build</id>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>

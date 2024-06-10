@@ -1,0 +1,22 @@
+### Create new department
+POST http://localhost:8080/departments
+Content-Type: application/json
+
+{
+  "id": 0,
+  "departmentName": "engineering",
+  "departmentDescription": "Technical Department"
+}
+
+> {%
+    if (response.status === 201) {
+        if (response.headers !== null && response.headers.valueOf('Location') !== null) {
+            client.global.set('location-of-created-resource', response.headers.valueOf('Location'));
+        }
+    }
+%}
+
+
+### Get newly created department
+GET {{location-of-created-resource}}
+Accept: application/json

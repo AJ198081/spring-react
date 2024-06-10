@@ -76,7 +76,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install --omit=dev</arguments>
+                            <arguments>install --omit=dev --legacy-peer-deps</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -103,7 +103,7 @@
                             <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/src/main/frontend/dist</directory>
+                                    <directory>${project.basedir}/src/main/frontend/dist/</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>

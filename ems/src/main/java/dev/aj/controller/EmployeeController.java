@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = {"http://localhost:5173"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = {"http://localhost:5173"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
 @RestController
 @RequestMapping("/employees")
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class EmployeeController {
 
     @SneakyThrows
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Validated EmployeeDto employeeDto) {
         log.debug("Create request for: %s".formatted(objectMapper.writeValueAsString(employeeDto)));
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeDto));
     }
@@ -48,8 +49,17 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
+    @SneakyThrows
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Boolean> isEmailExist(@PathVariable String email) {
+        ResponseEntity<Boolean> responseEntity = ResponseEntity.ok(employeeService.isEmailExist(email));
+        log.debug(objectMapper.writeValueAsString("Email %s, response %s".formatted(email, responseEntity)));
+        return responseEntity;
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody @Validated EmployeeDto employeeDto) {
         Optional<EmployeeDto> optionalUpdatedEmployee = employeeService.updateEmployee(id, employeeDto);
         if (optionalUpdatedEmployee.isPresent()) {
             return ResponseEntity.ok().body(optionalUpdatedEmployee.get());

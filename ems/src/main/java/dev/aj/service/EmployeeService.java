@@ -15,4 +15,6 @@ public interface EmployeeService {
     Optional<EmployeeDto> updateEmployee(Long employeeId, EmployeeDto updatedEmployee);
 
     boolean deleteEmployee(Long employeeId);
+
+    boolean isEmailExist(String email);
 }

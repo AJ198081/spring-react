@@ -80,16 +80,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return false;
     }
 
+    @Override
+    public boolean isEmailExist(String email) {
+        return employeeRepository.existsByEmail(email);
+    }
+
     private Employee saveEmployeeOrThrow(Employee employee) {
         try {
             return employeeRepository.save(employee);
         } catch (ConstraintViolationException e) {
-            throw new FailedToPersistEntityException(
-                    "Failed to save entity, Constraint %s violated, %s".formatted(e.getConstraintName(), e.getMessage()));
+            throw new FailedToPersistEntityException("Failed to save entity, Constraint %s violated, %s".formatted(e.getConstraintName(), e.getMessage()));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }
-

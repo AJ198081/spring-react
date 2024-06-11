@@ -5,6 +5,7 @@ import dev.aj.exception.ResourceNotFoundException;
 import dev.aj.mapper.DepartmentMapper;
 import dev.aj.repository.DepartmentRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
@@ -61,5 +62,25 @@ public class DepartmentServiceImpl implements DepartmentService {
         return Optional.of(departmentRepository.saveAndFlush(department))
                        .map(departmentMapper::toDto)
                        .orElseThrow();
+    }
+
+    @Override
+    public DepartmentDto replaceDepartment(Long id, DepartmentDto departmentDto) {
+
+        Objects.requireNonNull(departmentDto, "DepartmentDto shall not be null");
+
+        return departmentRepository.findById(id)
+                                   .map(department -> {
+                                       department.setDepartmentName(departmentDto.getDepartmentName());
+                                       department.setDepartmentDescription(departmentDto.getDepartmentDescription());
+                                       return departmentRepository.saveAndFlush(department);
+                                   })
+                                   .map(departmentMapper::toDto)
+                                   .orElseThrow();
+    }
+
+    @Override
+    public void deleteDepartment(Long id) {
+        departmentRepository.deleteById(id);
     }
 }

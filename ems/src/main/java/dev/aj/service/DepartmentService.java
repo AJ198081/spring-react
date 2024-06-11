@@ -8,4 +8,6 @@ public interface DepartmentService {
     DepartmentDto getDepartment(Long id);
     List<DepartmentDto> getAllDepartments();
     DepartmentDto updateDepartment(Long id, DepartmentDto departmentDto);
+    DepartmentDto replaceDepartment(Long id, DepartmentDto departmentDto);
+    void deleteDepartment(Long id);
 }

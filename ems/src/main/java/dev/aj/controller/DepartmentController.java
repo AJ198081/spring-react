@@ -9,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,9 +54,20 @@ public class DepartmentController {
         return ResponseEntity.ok(departmentDtos);
     }
 
-    @PatchMapping(path = "/update/{id}")
+    @PatchMapping(path = "/{id}")
     public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable Long id, @RequestBody @Validated DepartmentDto departmentDto) {
         DepartmentDto updatedDepartmentDto = departmentService.updateDepartment(id, departmentDto);
         return ResponseEntity.ok().body(updatedDepartmentDto);
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<DepartmentDto> replaceDepartmentDetails(@PathVariable Long id, @RequestBody @Validated DepartmentDto departmentDto) {
+        return ResponseEntity.ok(departmentService.replaceDepartment(id, departmentDto));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
+        departmentService.deleteDepartment(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -17,4 +17,5 @@ public class EmployeeDto {
     private String fullName;
     @Email
     private String email;
+    private Long departmentId;
 }

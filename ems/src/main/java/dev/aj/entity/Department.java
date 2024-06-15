@@ -1,5 +1,6 @@
 package dev.aj.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class Department {
     @SequenceGenerator(name = "department_generator", sequenceName = "department_id_sequence", initialValue = 23, allocationSize = 15)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String departmentName;
+
     private String departmentDescription;
 }

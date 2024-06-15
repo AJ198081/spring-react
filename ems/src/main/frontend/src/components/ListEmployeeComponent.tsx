@@ -16,13 +16,17 @@ export function ListEmployeeComponent() {
 
     const fetchEmployees = async () => {
         try {
-            setLoading(true)
+            setLoading(true);
+            console.log(`IsLoading: ${loading}`);
             const response = await listEmployees()
             if (response.status === 200) {
                 setEmployees(response.data);
+            } else {
+                console.log(`Error occurred whilst fetching employees`);
+                setLoading(false);
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         } finally {
             setLoading(false);
         }
@@ -33,33 +37,35 @@ export function ListEmployeeComponent() {
         if (axiosResponse.status === 204) {
             setEmployees(prevState => {
                 return prevState.filter(employee => employee.id !== id);
-            })
+            });
             alert(`Deleted employee with ID: ${id}`);
         } else {
             alert(`Unable to delete employee ID: ${id}`);
         }
     };
 
-    let renderEmpployeesTable = <table className={"table table-striped table-hover table-bordered"}>
+    let renderEmployeesTable = <table className={"table table-striped table-hover table-bordered"}>
         <thead>
-        <tr>
+        <tr className={`text-center`}>
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Department ID</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {
-            employees.map((emp) => {
+           employees !== null && employees.length !== 0 && employees.map((emp) => {
                     const employeeNameArray = emp.fullName.split(" ");
 
-                    return <tr key={emp.id}>
+                    return <tr className={`text-center`} key={emp.id}>
                         <td>{emp.id}</td>
                         <td>{employeeNameArray[0]}</td>
                         <td>{employeeNameArray[1]}</td>
                         <td>{emp.email}</td>
+                        <td>{emp.departmentId}</td>
                         <td>
                             <button
                                 className={`btn btn-info ms-2`}
@@ -91,7 +97,7 @@ export function ListEmployeeComponent() {
             >
                 Add Employee
             </button>
-            {loading ? <h2>Loading....</h2> : renderEmpployeesTable}
+            {loading ? <h2>Loading....</h2> : renderEmployeesTable}
         </div>
     );
 }

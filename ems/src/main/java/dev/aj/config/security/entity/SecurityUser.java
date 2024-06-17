@@ -1,4 +1,4 @@
-package dev.aj.config.entity;
+package dev.aj.config.security.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -33,10 +33,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 public class SecurityUser implements UserDetails {
 
+    private static final String ROLE_PREFIX = "ROLE_";
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "security-user-generator")
     @SequenceGenerator(name = "security-user-generator", sequenceName = "security-user-id-seq", allocationSize = 1, initialValue = 10001)
-    @Column(name = "id")
     private Long id;
 
     private String name;
@@ -50,7 +51,7 @@ public class SecurityUser implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "security_users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
@@ -63,7 +64,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        return roles.stream().map(role -> new SimpleGrantedAuthority(ROLE_PREFIX.concat(role.getName()))).collect(Collectors.toSet());
     }
 
     @Override

@@ -1,6 +1,6 @@
-package dev.aj.config.entity.repository;
+package dev.aj.config.security.entity.repository;
 
-import dev.aj.config.entity.SecurityUser;
+import dev.aj.config.security.entity.SecurityUser;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package dev.aj.config.entity;
+package dev.aj.config.security.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +30,7 @@ public class Role {
     @SequenceGenerator(name = "role-generator", sequenceName = "role-id-seq", allocationSize = 1, initialValue = 5001)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "roles")

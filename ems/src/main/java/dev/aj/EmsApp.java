@@ -1,10 +1,13 @@
 package dev.aj;
 
-import dev.aj.config.SecurityConfig;
-import dev.aj.config.entity.Role;
-import dev.aj.config.entity.SecurityUser;
-import dev.aj.config.entity.repository.RoleRepository;
-import dev.aj.config.entity.repository.SecurityUserRepository;
+import dev.aj.config.security.SecurityConfig;
+import dev.aj.config.security.entity.Role;
+import dev.aj.config.security.entity.SecurityUser;
+import dev.aj.config.security.entity.repository.RoleRepository;
+import dev.aj.config.security.entity.repository.SecurityUserRepository;
+import dev.aj.entity.Department;
+import dev.aj.entity.Employee;
+import dev.aj.repository.EmployeeRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +25,7 @@ public class EmsApp {
 
     private final SecurityUserRepository securityUserRepository;
     private final RoleRepository roleRepository;
+    private final EmployeeRepository employeeRepository;
     private final ApplicationContext applicationContext;
 
     public static void main(String[] args) {
@@ -30,35 +34,67 @@ public class EmsApp {
 
     @PostConstruct
     public void createUsersInDB() {
-
         if (securityUserRepository.count() == 0) {
-            List<SecurityConfig.SecurityUserRecord> securityUserRecords = (List<SecurityConfig.SecurityUserRecord>) applicationContext.getBean("securityUserRecords");
-            PasswordEncoder encoder = applicationContext.getBean("encoder", PasswordEncoder.class);
-
-            Set<SecurityUser> securityUsers = securityUserRecords.stream()
-                                                                 .map(securityUserRecord -> {
-
-                                                                     SecurityUser securityUser = SecurityUser.builder()
-                                                                                                             .username(securityUserRecord.username())
-                                                                                                             .password(encoder.encode(securityUserRecord.password()))
-                                                                                                             .email(securityUserRecord.email())
-                                                                                                             .roles(new HashSet<>())
-                                                                                                             .build();
-
-                                                                     Role role = roleRepository.findByName(securityUserRecord.role())
-                                                                                               .orElseGet(() -> Role.builder()
-                                                                                                                    .name(securityUserRecord.role())
-                                                                                                                    .securityUsers(new HashSet<>())
-                                                                                                                    .build());
-                                                                     role.addSecurityUsers(securityUser);
-                                                                     securityUser.addRole(role);
-
-                                                                     return securityUser;
-                                                                 }).collect(Collectors.toSet());
-
-            securityUserRepository.saveAllAndFlush(securityUsers);
-
+            persistLoginUsersAndRoles();
         }
+        if (employeeRepository.count() == 0) {
+            persistEmployeesAndDepartments();
+        }
+    }
 
+    private void persistEmployeesAndDepartments() {
+        Employee employeePW = Employee.builder()
+                                      .firstName("P")
+                                      .lastName("W")
+                                      .email("pw@gmail.com")
+                                      .department(Department.builder()
+                                                            .departmentName("Engineering")
+                                                            .departmentDescription("Engineering and Technical Services")
+                                                            .build())
+                                      .build();
+
+        Employee employeeBW = Employee.builder()
+                                      .firstName("B")
+                                      .lastName("W")
+                                      .email("bw@gmail.com")
+                                      .department(Department.builder()
+                                                            .departmentName("Business")
+                                                            .departmentDescription("Business and Admin Services")
+                                                            .build())
+                                      .build();
+
+        employeeRepository.saveAllAndFlush(List.of(employeePW, employeeBW));
+    }
+
+    private void persistLoginUsersAndRoles() {
+        List<SecurityConfig.SecurityUserRecord> securityUserRecords = (List<SecurityConfig.SecurityUserRecord>) applicationContext.getBean("securityUserRecords");
+        PasswordEncoder encoder = applicationContext.getBean("encoder", PasswordEncoder.class);
+
+        Set<SecurityUser> securityUsers = getMappedSecurityUser(securityUserRecords, encoder);
+
+        securityUserRepository.saveAllAndFlush(securityUsers);
+    }
+
+    public Set<SecurityUser> getMappedSecurityUser(List<SecurityConfig.SecurityUserRecord> securityUserRecords, PasswordEncoder encoder) {
+        return securityUserRecords.stream()
+                                  .map(securityUserRecord -> {
+
+                                      SecurityUser securityUser = SecurityUser.builder()
+                                                                              .name(securityUserRecord.username())
+                                                                              .username(securityUserRecord.username())
+                                                                              .password(encoder.encode(securityUserRecord.password()))
+                                                                              .email(securityUserRecord.email())
+                                                                              .roles(new HashSet<>())
+                                                                              .build();
+
+                                      Role role = roleRepository.findByName(securityUserRecord.role())
+                                                                .orElseGet(() -> Role.builder()
+                                                                                     .name(securityUserRecord.role())
+                                                                                     .securityUsers(new HashSet<>())
+                                                                                     .build());
+                                      role.addSecurityUsers(securityUser);
+
+                                      return securityUser;
+                                  }).collect(Collectors.toSet());
     }
 }

@@ -13,3 +13,7 @@ Authorization: Basic {{superuseremail}} {{superpassword}}
 "email": "pw5@gmail.com",
 "roles": ["superuser"]
 }
+
+### Ensure your Docker Daemon is running
+cd to 'ems', and 
+docker-compose up

@@ -1,6 +1,6 @@
 You might need a login for yourself to ensure an end-to-end experience
 
-### Register a new user
+## Register a new user
 POST http://localhost:8080/user/register
 Content-Type: application/json
 Authorization: Basic {{superuseremail}} {{superpassword}}
@@ -15,5 +15,5 @@ Authorization: Basic {{superuseremail}} {{superpassword}}
 }
 
 ### Ensure your Docker Daemon is running
-cd to 'ems', and 
-docker-compose up
+### cd to 'ems', and 
+# docker-compose up

@@ -43,11 +43,13 @@ public class SecurityConfig {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
-                                   .hasAnyRole(USER, ADMIN, SUPERUSER)
+                                        .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")
-                                   .hasAnyRole(ADMIN, SUPERUSER)
+                                        .hasAnyRole(ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.PUT, "/employees/*", "/departments/*")
-                                   .hasAnyRole(USER, ADMIN, SUPERUSER)
+                                        .hasAnyRole(USER, ADMIN, SUPERUSER)
+                                   .requestMatchers(HttpMethod.POST, "/user/register")
+                                        .hasRole(SUPERUSER)
                                    .requestMatchers("/", "/**")
                                    .authenticated()
                            )

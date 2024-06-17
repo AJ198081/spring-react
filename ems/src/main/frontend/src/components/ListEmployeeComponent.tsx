@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {deleteEmployeeById, listEmployees} from "../services/EmployeeService.ts";
 import {useNavigate} from "react-router-dom";
 import {Employee} from "../types/Employee.ts";
 
-export function ListEmployeeComponent() {
+export function ListEmployeeComponent() : React.ReactNode {
 
     const [employees, setEmployees]: [Employee[], (value: (((prevState: Employee[]) => Employee[]) | Employee[])) => void] = useState<Employee[]>([]);
     const [loading, setLoading]: [boolean, (value: ((prevState: boolean) => boolean) | boolean) => void] = useState(false);

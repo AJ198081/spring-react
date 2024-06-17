@@ -48,5 +48,4 @@ public abstract class LoginUserMapper {
     public String encodePassword(final LoginUserDetails loginUserDetails) {
         return encoder.encode(loginUserDetails.getPassword());
     }
-
 }

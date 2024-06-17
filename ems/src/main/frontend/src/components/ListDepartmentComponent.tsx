@@ -4,9 +4,10 @@ import {deleteDepartment, fetchAllDepartments} from "../services/DepartmentServi
 import {DepartmentContext} from "../App.tsx";
 import {Department} from "../types/Department.ts";
 
-const ListDepartmentComponent = () => {
+const ListDepartmentComponent = () : React.ReactNode => {
 
-    const [error, setError] = useState<string>('');
+    const [error, setError]: [string, (value: (((prevState: string) => string) | string)) => void] = useState<string>('');
+
     const {departments, setDepartments}: {
         departments: Department[];
         setDepartments: React.Dispatch<React.SetStateAction<Department[]>>
@@ -15,7 +16,7 @@ const ListDepartmentComponent = () => {
     const navigator = useNavigate();
 
     useEffect(() => {
-        fetchAllDepartments(departments, setDepartments, setError);
+       void fetchAllDepartments(departments, setDepartments, setError);
     }, []);
 
     const handleUpdateDepartment = (department: Department) => {

@@ -1,6 +1,7 @@
 import {NavLink} from "react-router-dom";
+import React from "react";
 
-const HeaderComponent = () => {
+const HeaderComponent = (): React.ReactNode => {
 
     return (
         <div>

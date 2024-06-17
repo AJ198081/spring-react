@@ -1,4 +1,6 @@
-const FooterComponent = () => {
+import React from "react";
+
+const FooterComponent = () : React.ReactNode => {
 
     return (
         <div>

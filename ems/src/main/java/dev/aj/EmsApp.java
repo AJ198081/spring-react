@@ -3,8 +3,8 @@ package dev.aj;
 import dev.aj.config.security.SecurityConfig;
 import dev.aj.config.security.entity.Role;
 import dev.aj.config.security.entity.SecurityUser;
-import dev.aj.config.security.entity.repository.RoleRepository;
-import dev.aj.config.security.entity.repository.SecurityUserRepository;
+import dev.aj.config.security.repository.RoleRepository;
+import dev.aj.config.security.repository.SecurityUserRepository;
 import dev.aj.entity.Department;
 import dev.aj.entity.Employee;
 import dev.aj.repository.EmployeeRepository;
@@ -15,11 +15,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class })
 @RequiredArgsConstructor
 public class EmsApp {
 
@@ -30,6 +34,11 @@ public class EmsApp {
 
     public static void main(String[] args) {
         SpringApplication.run(EmsApp.class, args);
+    }
+
+    @Bean(name = "encoder")
+    public PasswordEncoder bcryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @PostConstruct

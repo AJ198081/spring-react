@@ -1,4 +1,4 @@
-package dev.aj.config.security.entity.repository;
+package dev.aj.config.security.repository;
 
 import dev.aj.config.security.entity.SecurityUser;
 import java.util.Optional;

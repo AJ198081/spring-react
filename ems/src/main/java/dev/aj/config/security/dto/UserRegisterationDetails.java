@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginUserDetails {
+public class UserRegisterationDetails {
     private Long id;
     private String name;
     private String username;

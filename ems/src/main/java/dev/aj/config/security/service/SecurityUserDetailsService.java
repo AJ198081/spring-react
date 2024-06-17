@@ -1,9 +1,9 @@
-package dev.aj.config.security.entity.service;
+package dev.aj.config.security.service;
 
-import dev.aj.config.security.dto.LoginUserDetails;
+import dev.aj.config.security.dto.UserRegisterationDetails;
 import dev.aj.config.security.entity.SecurityUser;
-import dev.aj.config.security.entity.repository.SecurityUserRepository;
-import dev.aj.config.security.mapper.LoginUserMapper;
+import dev.aj.config.security.mapper.UserRegistrationMapper;
+import dev.aj.config.security.repository.SecurityUserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class SecurityUserDetailsService implements UserDetailsService, UserRegisterationService {
 
     private final SecurityUserRepository securityUserRepository;
-    private final LoginUserMapper loginUserMapper;
+    private final UserRegistrationMapper loginUserMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -28,8 +28,8 @@ public class SecurityUserDetailsService implements UserDetailsService, UserRegis
 
     @SneakyThrows
     @Override
-    public LoginUserDetails registerUser(LoginUserDetails loginUserDetails) {
-        SecurityUser securityUser = loginUserMapper.toEntity(loginUserDetails);
+    public UserRegisterationDetails registerUser(UserRegisterationDetails userRegisterationDetails) {
+        SecurityUser securityUser = loginUserMapper.toEntity(userRegisterationDetails);
         Optional<SecurityUser> optionalSecurityUser = securityUserRepository.findByUsernameOrEmail(securityUser.getUsername(), securityUser.getEmail());
 
         if(optionalSecurityUser.isPresent()) {

@@ -20,14 +20,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -42,6 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain addSecurityFilters(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
+                                   .requestMatchers("/").permitAll()
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
                                         .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")
@@ -94,11 +94,6 @@ public class SecurityConfig {
                                                                                                 .accountLocked(false)
                                                                                                 .build())
                                                                  .toList());
-    }
-
-    @Bean(name = "encoder")
-    public PasswordEncoder bcryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @SneakyThrows

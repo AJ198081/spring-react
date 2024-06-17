@@ -7,6 +7,8 @@ import {ManageEmployeeComponent} from "./components/ManageEmployeeComponent.tsx"
 import ListDepartmentComponent from "./components/ListDepartmentComponent.tsx";
 import ManageDepartmentComponent from "./components/ManageDepartmentComponent.tsx";
 import {Department} from "./types/Department.ts";
+import RegisterComponent from "./components/RegisterComponent.tsx";
+import LoginComponent from "./components/LoginComponent.tsx";
 
 
 export const DepartmentContext: React.Context<{
@@ -40,6 +42,8 @@ function App() {
                         <Route path={"/departments"} element={<ListDepartmentComponent/>}/>
                         <Route path={"/add-department"} element={<ManageDepartmentComponent/>}/>
                         <Route path={"/edit-department/:id"} element={<ManageDepartmentComponent/>}/>
+                        <Route path={"/register"} element={<RegisterComponent/>}/>
+                        <Route path={"/login"} element={<LoginComponent/>}/>
                     </Routes>
                 </DepartmentContext.Provider>
                 <FooterComponent/>

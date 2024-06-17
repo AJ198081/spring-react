@@ -1,9 +1,9 @@
 package dev.aj.config.security.mapper;
 
-import dev.aj.config.security.dto.LoginUserDetails;
+import dev.aj.config.security.dto.UserRegisterationDetails;
 import dev.aj.config.security.entity.Role;
 import dev.aj.config.security.entity.SecurityUser;
-import dev.aj.config.security.entity.repository.RoleRepository;
+import dev.aj.config.security.repository.RoleRepository;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public abstract class LoginUserMapper {
+public abstract class UserRegistrationMapper {
 
     @Autowired
     private PasswordEncoder encoder;
@@ -24,17 +24,17 @@ public abstract class LoginUserMapper {
     private RoleRepository roleRepository;
 
     @Mapping(target = "roles", expression = "java(securityUser.getRoles().stream().map(dev.aj.config.security.entity.Role::getName).toList())")
-    public abstract LoginUserDetails toDto(final SecurityUser securityUser);
+    public abstract UserRegisterationDetails toDto(final SecurityUser securityUser);
 
-    @Mapping(target = "roles", source = "loginUserDetails", qualifiedByName = "stringToSet")
-    @Mapping(target = "password", source = "loginUserDetails", qualifiedByName = "encodePassword")
-    public abstract SecurityUser toEntity(final LoginUserDetails loginUserDetails);
+    @Mapping(target = "roles", source = "userRegisterationDetails", qualifiedByName = "stringToSet")
+    @Mapping(target = "password", source = "userRegisterationDetails", qualifiedByName = "encodePassword")
+    public abstract SecurityUser toEntity(final UserRegisterationDetails userRegisterationDetails);
 
     @Named("stringToSet")
-    public Set<Role> stringToSet(final LoginUserDetails loginUserDetails) {
-        return loginUserDetails.getRoles().stream()
-                               .map(this::roleBuilder)
-                               .collect(Collectors.toSet());
+    public Set<Role> stringToSet(final UserRegisterationDetails userRegisterationDetails) {
+        return userRegisterationDetails.getRoles().stream()
+                                       .map(this::roleBuilder)
+                                       .collect(Collectors.toSet());
     }
 
     private Role roleBuilder(String role) {
@@ -45,7 +45,7 @@ public abstract class LoginUserMapper {
     }
 
     @Named("encodePassword")
-    public String encodePassword(final LoginUserDetails loginUserDetails) {
-        return encoder.encode(loginUserDetails.getPassword());
+    public String encodePassword(final UserRegisterationDetails userRegisterationDetails) {
+        return encoder.encode(userRegisterationDetails.getPassword());
     }
 }

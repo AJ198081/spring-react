@@ -16,6 +16,12 @@ const HeaderComponent = (): React.ReactNode => {
                             <li className={"nav-item"}>
                                 <NavLink to={"/departments"} className={"nav-link"}>Department</NavLink>
                             </li>
+                            <li className={"nav-item"}>
+                                <NavLink to={`/register`} className={`nav-link`}>Register</NavLink>
+                            </li>
+                            <li className={"nav-item"}>
+                                <NavLink to={`/login`} className={`nav-link`}>Login</NavLink>
+                            </li>
                         </ul>
                     </div>
                 </nav>

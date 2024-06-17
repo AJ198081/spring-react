@@ -10,21 +10,33 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Profile("dev")
 public class WebConfig implements WebMvcConfigurer {
 
-//    Add CORS configuration, just for 'dev' profile, no need to annotate @CrossOrigin on Controller as that takes effect in 'prod' as well
+    //    Add CORS configuration, just for 'dev' profile, no need to annotate @CrossOrigin on Controller as that takes effect in 'prod' as well
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+
+        String[] allowedMethods = {HttpMethod.GET.toString(), HttpMethod.POST.toString(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.PATCH.name()};
+
         registry.addMapping("/employees/**")
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins(VITE_HOST)
                 .allowedHeaders("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods(allowedMethods)
                 .allowCredentials(true)
                 .maxAge(600);
 
         registry.addMapping("/departments/**")
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins(VITE_HOST)
                 .allowedHeaders("*")
-                .allowedMethods(HttpMethod.GET.toString(), "POST", "PUT", "DELETE", "PATCH")
+                .allowedMethods(allowedMethods)
+                .allowCredentials(true)
+                .maxAge(534);
+
+        registry.addMapping("/user/**")
+                .allowedOrigins(VITE_HOST)
+                .allowedHeaders("*")
+                .allowedMethods(allowedMethods)
                 .allowCredentials(true)
                 .maxAge(534);
     }
+
+    public static final String VITE_HOST = "http://localhost:5173";
 }

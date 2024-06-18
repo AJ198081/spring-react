@@ -1,6 +1,10 @@
-You might need a login for yourself to ensure an end-to-end experience
+### Ensure your Docker Daemon is running
+### cd to 'ems', and 
+# docker-compose up
 
-## Register a new user
+### Two ways to register a new userS for an end-to-end experience
+
+## Via API, only 'superuser' role can do this
 POST http://localhost:8080/user/register
 Content-Type: application/json
 Authorization: Basic {{superuseremail}} {{superpassword}}
@@ -14,6 +18,4 @@ Authorization: Basic {{superuseremail}} {{superpassword}}
 "roles": ["superuser"]
 }
 
-### Ensure your Docker Daemon is running
-### cd to 'ems', and 
-# docker-compose up
+## Via front-end, 'admin' and 'superuser' role can do it

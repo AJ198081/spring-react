@@ -41,8 +41,6 @@ public class SecurityConfig {
     public SecurityFilterChain addSecurityFilters(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
-//                                   .requestMatchers("/").permitAll()
-//                                   .requestMatchers(HttpMethod.OPTIONS.name(), "/**").permitAll()
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
                                         .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")

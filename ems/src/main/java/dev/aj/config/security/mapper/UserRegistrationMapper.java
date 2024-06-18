@@ -38,10 +38,14 @@ public abstract class UserRegistrationMapper {
     }
 
     private Role roleBuilder(String role) {
-       return roleRepository.findByName(role).orElseGet(() -> Role.builder()
-                                                            .name(role)
-                                                            .securityUsers(new HashSet<>())
-                                                            .build());
+        return roleRepository.findByName(role).map(existingRole -> {
+                                 existingRole.setSecurityUsers(new HashSet<>());
+                                 return existingRole;
+                             })
+                             .orElseGet(() -> Role.builder()
+                                                  .name(role)
+                                                  .securityUsers(new HashSet<>())
+                                                  .build());
     }
 
     @Named("encodePassword")

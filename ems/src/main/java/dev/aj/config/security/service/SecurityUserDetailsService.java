@@ -4,6 +4,7 @@ import dev.aj.config.security.dto.UserRegisterationDetails;
 import dev.aj.config.security.entity.SecurityUser;
 import dev.aj.config.security.mapper.UserRegistrationMapper;
 import dev.aj.config.security.repository.SecurityUserRepository;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -28,6 +29,7 @@ public class SecurityUserDetailsService implements UserDetailsService, UserRegis
 
     @SneakyThrows
     @Override
+    @Transactional
     public UserRegisterationDetails registerUser(UserRegisterationDetails userRegisterationDetails) {
         SecurityUser securityUser = loginUserMapper.toEntity(userRegisterationDetails);
         Optional<SecurityUser> optionalSecurityUser = securityUserRepository.findByUsernameOrEmail(securityUser.getUsername(), securityUser.getEmail());
@@ -41,6 +43,7 @@ public class SecurityUserDetailsService implements UserDetailsService, UserRegis
             secUser.setRoles(securityUser.getRoles());
             return loginUserMapper.toDto(securityUserRepository.saveAndFlush(secUser));
         } else {
+            securityUser.getRoles().forEach(role -> role.addSecurityUsers(securityUser));
             return loginUserMapper.toDto(securityUserRepository.save(securityUser));
         }
     }

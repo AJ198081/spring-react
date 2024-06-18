@@ -1,8 +1,8 @@
-### Ensure your Docker Daemon is running
+# Ensure your Docker Daemon is running
 ### cd to 'ems', and 
-# docker-compose up
+### docker-compose up
 
-### Two ways to register a new userS for an end-to-end experience
+# Two ways to register a new userS for an end-to-end experience
 
 ## Via API, only 'superuser' role can do this
 POST http://localhost:8080/user/register

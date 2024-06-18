@@ -1,22 +1,25 @@
-import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from "axios";
+import axios, {AxiosRequestConfig, AxiosResponse, CancelTokenSource, InternalAxiosRequestConfig} from "axios";
 import {Employee} from "../types/Employee.ts";
 import {getToken} from "./AuthorisationService.ts";
+import {useNavigate} from "react-router-dom";
 
 const REST_EMPLOYEE_API_URL = "http://localhost:8080/employees";
 
 axios.interceptors.request.use((config) => {
-    if(getToken()){
+    if (getToken()) {
         config.headers['Authorization'] = getToken();
     }
     return config;
-}, (error) => {return Promise.reject(error)})
+}, (error) => {
+    return Promise.reject(error)
+})
 
-export const listEmployees = async ()    => {
-    return axios.get(REST_EMPLOYEE_API_URL.concat("/all"))
+export const listEmployees = async (cancelTokenSource: CancelTokenSource): Promise<AxiosResponse<Employee[], InternalAxiosRequestConfig>> => {
+    return axios.get(REST_EMPLOYEE_API_URL.concat("/all"), {cancelToken: cancelTokenSource.token})
 }
 
 export const addEmployee = async (employee: Employee): Promise<AxiosResponse<Employee, InternalAxiosRequestConfig>> => {
-   return await axios.post(REST_EMPLOYEE_API_URL, employee);
+    return await axios.post(REST_EMPLOYEE_API_URL, employee);
 };
 
 export const getEmployeeById = async (id: string): Promise<AxiosResponse<Employee, InternalAxiosRequestConfig>> => {
@@ -28,6 +31,8 @@ export const updateEmployee = async (id: string, employee: Employee) => {
 }
 
 export const deleteEmployeeById = async (id: string): Promise<AxiosResponse> => {
+    const navigateFunction = useNavigate();
+    navigateFunction('/login');
     return await axios.delete(REST_EMPLOYEE_API_URL.concat(`/${id}`));
 };
 

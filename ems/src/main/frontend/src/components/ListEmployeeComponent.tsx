@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {deleteEmployeeById, listEmployees} from "../services/EmployeeService.ts";
 import {useNavigate} from "react-router-dom";
 import {Employee} from "../types/Employee.ts";
+import axios, {CancelTokenSource} from "axios";
 
 export function ListEmployeeComponent() : React.ReactNode {
 
@@ -11,14 +12,24 @@ export function ListEmployeeComponent() : React.ReactNode {
     const navigator = useNavigate();
 
     useEffect( () => {
-        fetchEmployees();
+        const cancelTokenSource = axios.CancelToken.source();
+
+        if (sessionStorage.getItem('token')) {
+            void fetchEmployees(cancelTokenSource);
+        } else {
+            navigator('/login');
+        }
+
+        return () => {
+            cancelTokenSource.cancel(`Browser initiated request cancellation actioned.`)
+        }
     }, [])
 
-    const fetchEmployees = async () => {
+    const fetchEmployees = async (cancelTokenSource: CancelTokenSource) => {
         try {
             setLoading(true);
             console.log(`IsLoading: ${loading}`);
-            const response = await listEmployees()
+            const response = await listEmployees(cancelTokenSource)
             if (response.status === 200) {
                 setEmployees(response.data);
             } else {

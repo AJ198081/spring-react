@@ -16,7 +16,11 @@ const ListDepartmentComponent = () : React.ReactNode => {
     const navigator = useNavigate();
 
     useEffect(() => {
-       void fetchAllDepartments(departments, setDepartments, setError);
+        if (sessionStorage.getItem('token')) {
+            void fetchAllDepartments(departments, setDepartments, setError);
+        } else {
+            navigator('/login')
+        }
     }, []);
 
     const handleUpdateDepartment = (department: Department) => {

@@ -1,9 +1,5 @@
 import React, {ChangeEvent, MouseEvent, useContext, useEffect, useState} from "react";
-import {
-    addEmployee, emailExists,
-    getEmployeeById,
-    updateEmployee
-} from '../services/EmployeeService.ts';
+import {addEmployee, emailExists, getEmployeeById, updateEmployee} from '../services/EmployeeService.ts';
 import {Params, useNavigate, useParams} from "react-router-dom";
 import {Employee, EmployeeError} from "../types/Employee.ts";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
@@ -68,22 +64,27 @@ export const ManageEmployeeComponent = () => {
 
     let validateEmailUniquenessAndSaveOrUpdateEmployee = async function (employee: Employee) {
         try {
-
             if (id) {
-                const response = await getEmployeeById(id)
-                const employeeFromDatabase = response.data;
-                if (employee.email === employeeFromDatabase.email) {
-                    await saveOrUpdateEmployee(employee, id);
-                } else {
-                    const response = await emailExists(employee.email);
-                    if (response.status === 200 && !response.data) {
-                        await saveOrUpdateEmployee(employee, id);
-                    } else if (response.status === 200 && response.data) {
-                        setEmployeeError({
-                            ...employeeError,
-                            email: 'Duplicated email, ${email} already exists in our database.'
-                        })
+                try {
+                    const response = await getEmployeeById(id);
+                    if (response.status === 200) {
+                        const employeeFromDatabase = response.data;
+                        if (employee.email === employeeFromDatabase.email) {
+                            await saveOrUpdateEmployee(employee, id);
+                        } else {
+                            const response = await emailExists(employee.email);
+                            if (response.status === 200 && !response.data) {
+                                await saveOrUpdateEmployee(employee, id);
+                            } else if (response.status === 200 && response.data) {
+                                setEmployeeError({
+                                    ...employeeError,
+                                    email: 'Duplicated email, ${email} already exists in our database.'
+                                })
+                            }
+                        }
                     }
+                } catch (err) {
+                    setApiError(`Error message ${err}`)
                 }
             } else {
                 emailExists(employee.email)
@@ -122,7 +123,7 @@ export const ManageEmployeeComponent = () => {
 
     const pageTitle = () => {
         if (id) {
-            return <h2 className={'text-center mt-3'}>Edit Employee</h2>;
+            return <h2 className={'text-center mt-3'}>Update Employee</h2>;
         } else {
             return <h2 className={'text-center mt-3'}>Add Employee</h2>;
         }
@@ -143,7 +144,7 @@ export const ManageEmployeeComponent = () => {
         errorsCopy.lastName = validateFormField(lastName, 'Last name');
         errorsCopy.email = validateFormField(email, 'Email');
         errorsCopy.departmentId = validateFormField(String(departmentId === 0 ? '' : departmentId), 'Department Id');
-       
+
         const validateEmailSyntax = (email: string) => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email) ? '' : 'Invalid email format';
@@ -223,7 +224,8 @@ export const ManageEmployeeComponent = () => {
                                             })
                                     }
                                 </select>
-                                {employeeError.departmentId && <div className={'invalid-feedback'}>{employeeError.departmentId}</div>}
+                                {employeeError.departmentId &&
+                                    <div className={'invalid-feedback'}>{employeeError.departmentId}</div>}
                             </div>
                             <button className={'btn btn-success m-4 align-content-center'}
                                     onClick={handleEmployeePersistence}>

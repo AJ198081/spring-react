@@ -41,6 +41,8 @@ public class SecurityConfig {
     public SecurityFilterChain addSecurityFilters(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
+                                   .requestMatchers("/user/login")
+                                        .permitAll()
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
                                         .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")
@@ -49,14 +51,14 @@ public class SecurityConfig {
                                         .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/user/register")
                                         .hasRole(SUPERUSER)
-                                   .requestMatchers("/", "/**")
-                                   .authenticated()
+                                   .anyRequest()
+                                        .authenticated()
                            )
                            .cors(corsCustomizer -> {
                                CorsConfigurationSource source = request -> {
                                    CorsConfiguration configuration = new CorsConfiguration();
                                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-                                   configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+                                   configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                                    configuration.setAllowedHeaders(Arrays.asList("*"));
                                    configuration.setAllowCredentials(true);
                                    return configuration;
@@ -65,7 +67,6 @@ public class SecurityConfig {
                            })
                            .csrf(customizer -> customizer.disable())
                            .httpBasic(Customizer.withDefaults())
-                           .formLogin(Customizer.withDefaults())
                            .sessionManagement(customizer -> customizer.maximumSessions(1))
                            .build();
     }
@@ -83,7 +84,6 @@ public class SecurityConfig {
     @SneakyThrows
     @Bean
     public UserDetailsService inMemoryUserDetailsManager(@Qualifier("encoder") PasswordEncoder encoder, @Qualifier("securityUserRecords") List<SecurityUserRecord> securityUserRecords) {
-
         return new InMemoryUserDetailsManager(securityUserRecords.stream()
                                                                  .map(securityUserRecord -> User.withUsername(securityUserRecord.username)
                                                                                                 .password(encoder.encode(securityUserRecord.password))

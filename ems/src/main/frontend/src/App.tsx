@@ -9,6 +9,7 @@ import ManageDepartmentComponent from "./components/ManageDepartmentComponent.ts
 import {Department} from "./types/Department.ts";
 import RegisterComponent from "./components/RegisterComponent.tsx";
 import LoginComponent from "./components/LoginComponent.tsx";
+import LogoutComponent from "./components/LogoutComponent.tsx";
 
 
 export const DepartmentContext: React.Context<{
@@ -44,6 +45,7 @@ function App() {
                         <Route path={"/edit-department/:id"} element={<ManageDepartmentComponent/>}/>
                         <Route path={"/register"} element={<RegisterComponent/>}/>
                         <Route path={"/login"} element={<LoginComponent/>}/>
+                        <Route path={"/logout"} element={<LogoutComponent />} />
                     </Routes>
                 </DepartmentContext.Provider>
                 <FooterComponent/>

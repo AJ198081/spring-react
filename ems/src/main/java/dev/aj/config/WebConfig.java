@@ -1,11 +1,13 @@
 package dev.aj.config;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //@Configuration
-//@Profile("dev")
+@Profile("dev")
 public class WebConfig implements WebMvcConfigurer {
 
     //    Add CORS configuration, just for 'dev' profile, no need to annotate @CrossOrigin on Controller as that takes effect in 'prod' as well

@@ -30,7 +30,7 @@ const LoginComponent = () => {
                 <div className={`col-md-6 offset-md-3`}>
                     <div className={`card`}>
                         <div className={`card-header`}>
-                            <h2 className={`text-center`}>User Registeration</h2>
+                            <h2 className={`text-center`}>Login</h2>
                         </div>
                         <div className={`card-body`}>
                             <form>

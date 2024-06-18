@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {LoginDetails} from "../types/LoginDetails.ts";
-import {login} from "../services/AuthorisationService.ts";
+import {login, storeToken} from "../services/AuthorisationService.ts";
 
 const LoginComponent = () => {
 
@@ -16,7 +16,7 @@ const LoginComponent = () => {
             try {
                 const response = await login(loginObject);
                 if (response.status === 204) {
-                    console.log(response);
+                    storeToken(`Basic ${window.btoa(loginObject.usernameOrEmail.concat(":", loginObject.password))}`);
                 }
             } catch (error){
                 console.log(error);

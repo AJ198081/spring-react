@@ -1,7 +1,15 @@
 import axios, {AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from "axios";
 import {Employee} from "../types/Employee.ts";
+import {getToken} from "./AuthorisationService.ts";
 
 const REST_EMPLOYEE_API_URL = "http://localhost:8080/employees";
+
+axios.interceptors.request.use((config) => {
+    if(getToken()){
+        config.headers['Authorization'] = getToken();
+    }
+    return config;
+}, (error) => {return Promise.reject(error)})
 
 export const listEmployees = async ()    => {
     return axios.get(REST_EMPLOYEE_API_URL.concat("/all"))

@@ -11,3 +11,11 @@ export const registerUserDetails = (registerUserDetails: RegisterationDetails): 
 export const login = (loginDetails: LoginDetails): Promise<AxiosResponse<void, AxiosRequestConfig>> => {
     return axios.post(AUTH_API_BASE_URL.concat("/login"), loginDetails);
 }
+
+export const storeToken = (token: string) => {
+    localStorage.setItem("token", token);
+}
+
+export const getToken = () : string | null => {
+    return localStorage.getItem("token");
+}

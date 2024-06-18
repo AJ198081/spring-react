@@ -26,7 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -41,7 +41,8 @@ public class SecurityConfig {
     public SecurityFilterChain addSecurityFilters(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
-                                   .requestMatchers("/").permitAll()
+//                                   .requestMatchers("/").permitAll()
+//                                   .requestMatchers(HttpMethod.OPTIONS.name(), "/**").permitAll()
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
                                         .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")

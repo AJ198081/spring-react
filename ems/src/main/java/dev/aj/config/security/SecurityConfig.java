@@ -67,6 +67,7 @@ public class SecurityConfig {
                            })
                            .csrf(customizer -> customizer.disable())
                            .httpBasic(Customizer.withDefaults())
+                           .formLogin(Customizer.withDefaults())
                            .sessionManagement(customizer -> customizer.maximumSessions(1))
                            .build();
     }

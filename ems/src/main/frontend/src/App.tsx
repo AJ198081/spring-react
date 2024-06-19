@@ -12,13 +12,12 @@ import LoginComponent from "./components/LoginComponent.tsx";
 import LogoutComponent from "./components/LogoutComponent.tsx";
 
 
-export const DepartmentContext: React.Context<{
-    departments: Department[];
-    setDepartments: React.Dispatch<React.SetStateAction<Department[]>>
-}> = React.createContext<{
+interface DepartmentContextType {
     departments: Department[];
     setDepartments: React.Dispatch<React.SetStateAction<Department[]>>;
-}>({
+}
+
+export const DepartmentContext: React.Context<DepartmentContextType> = React.createContext<DepartmentContextType>({
     departments: [],
     setDepartments: () => {
     }

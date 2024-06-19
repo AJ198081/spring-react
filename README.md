@@ -19,3 +19,21 @@ Authorization: Basic {{superuseremail}} {{superpassword}}
 }
 
 ## Via front-end, 'admin' and 'superuser' role can do it
+
+
+### Ensure your Docker Daemon is running
+### cd to 'ems', and 
+# docker-compose up
+
+# Change logging level - 
+
+POST http://localhost:8080/actuator/loggers/org.springframework.security
+Authorization: Basic {{superuseremail}} {{superpassword}}
+Content-Type: application/json
+
+{
+"configuredLevel": "INFO"
+}
+
+
+

@@ -13,13 +13,13 @@ export const login = (loginDetails: LoginDetails): Promise<AxiosResponse<void, A
 }
 
 export const storeToken = (token: string) => {
-    sessionStorage.setItem("token", token);
+    localStorage.setItem("token", token);
 }
 
 export const getToken = () : string | null => {
-    return sessionStorage.getItem("token");
+    return localStorage.getItem("token");
 }
 
 export const removeToken = (): void => {
-    sessionStorage.removeItem(`token`);
+    localStorage.removeItem(`token`);
 }

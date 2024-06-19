@@ -3,8 +3,8 @@ export interface Employee {
     id?: number;
     email: string;
     departmentId: number;
-    createdDate: string;
-    lastUpdatedDate: string;
+    createdDate?: string;
+    lastUpdatedDate?: string;
 }
 
 export interface EmployeeError {

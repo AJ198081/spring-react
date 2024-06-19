@@ -3,6 +3,7 @@ import {deleteEmployeeById, listEmployees} from "../services/EmployeeService.ts"
 import {useNavigate} from "react-router-dom";
 import {Employee} from "../types/Employee.ts";
 import axios, {CancelTokenSource} from "axios";
+import {getToken} from "../services/AuthorisationService.ts";
 
 export function ListEmployeeComponent() : React.ReactNode {
 
@@ -14,7 +15,7 @@ export function ListEmployeeComponent() : React.ReactNode {
     useEffect( () => {
         const cancelTokenSource = axios.CancelToken.source();
 
-        if (sessionStorage.getItem('token')) {
+        if (getToken() !== null && getToken()?.startsWith('Basic ')) {
             void fetchEmployees(cancelTokenSource);
         } else {
             navigator('/login');

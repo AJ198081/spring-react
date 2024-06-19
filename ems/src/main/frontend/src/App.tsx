@@ -24,30 +24,43 @@ export const DepartmentContext: React.Context<{
     }
 });
 
+export const LoginContext: React.Context<{
+    isUserLoggedIn: boolean;
+    setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+}> = React.createContext<{
+    isUserLoggedIn: boolean;
+    setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+}>({
+    isUserLoggedIn: false,
+    setIsUserLoggedIn: () => {}
+})
+
 function App() {
 
     const [departments, setDepartments]: [Department[], (value: (((prevState: Department[]) => Department[]) | Department[])) => void] = useState<Department[]>([]);
-
+    const [isUserLoggedIn, setIsUserLoggedIn]: [boolean, (value: (((prevState: boolean) => boolean) | boolean)) => void] = useState<boolean>(false);
 
     return (
         <React.Fragment>
             <BrowserRouter>
-                <HeaderComponent/>
-                <DepartmentContext.Provider value={{departments, setDepartments}}>
-                    <Routes>
-                        <Route path={"/"} element={<ListEmployeeComponent/>}/>
-                        <Route path={"/employees"} element={<ListEmployeeComponent/>}/>
-                        <Route path={"/add-employee"} element={<ManageEmployeeComponent/>}/>
-                        <Route path={"/update-employee/:id"} element={<ManageEmployeeComponent/>}/>
-                        <Route path={"/delete-employee/:id"} element={<ListEmployeeComponent/>}/>
-                        <Route path={"/departments"} element={<ListDepartmentComponent/>}/>
-                        <Route path={"/add-department"} element={<ManageDepartmentComponent/>}/>
-                        <Route path={"/edit-department/:id"} element={<ManageDepartmentComponent/>}/>
-                        <Route path={"/register"} element={<RegisterComponent/>}/>
-                        <Route path={"/login"} element={<LoginComponent/>}/>
-                        <Route path={"/logout"} element={<LogoutComponent />} />
-                    </Routes>
-                </DepartmentContext.Provider>
+                <LoginContext.Provider value={{isUserLoggedIn, setIsUserLoggedIn}}>
+                    <HeaderComponent/>
+                    <DepartmentContext.Provider value={{departments, setDepartments}}>
+                        <Routes>
+                            <Route path={"/"} element={<ListEmployeeComponent/>}/>
+                            <Route path={"/employees"} element={<ListEmployeeComponent/>}/>
+                            <Route path={"/add-employee"} element={<ManageEmployeeComponent/>}/>
+                            <Route path={"/update-employee/:id"} element={<ManageEmployeeComponent/>}/>
+                            <Route path={"/delete-employee/:id"} element={<ListEmployeeComponent/>}/>
+                            <Route path={"/departments"} element={<ListDepartmentComponent/>}/>
+                            <Route path={"/add-department"} element={<ManageDepartmentComponent/>}/>
+                            <Route path={"/edit-department/:id"} element={<ManageDepartmentComponent/>}/>
+                            <Route path={"/register"} element={<RegisterComponent/>}/>
+                            <Route path={"/login"} element={<LoginComponent/>}/>
+                            <Route path={"/logout"} element={<LogoutComponent/>}/>
+                        </Routes>
+                    </DepartmentContext.Provider>
+                </LoginContext.Provider>
                 <FooterComponent/>
             </BrowserRouter>
         </React.Fragment>

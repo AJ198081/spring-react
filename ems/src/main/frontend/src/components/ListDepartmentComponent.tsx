@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {deleteDepartment, fetchAllDepartments} from "../services/DepartmentService.ts";
 import {DepartmentContext} from "../App.tsx";
 import {Department} from "../types/Department.ts";
+import {getToken} from "../services/AuthorisationService.ts";
 
 const ListDepartmentComponent = () : React.ReactNode => {
 
@@ -13,18 +14,18 @@ const ListDepartmentComponent = () : React.ReactNode => {
         setDepartments: React.Dispatch<React.SetStateAction<Department[]>>
     } = useContext(DepartmentContext)
 
-    const navigator = useNavigate();
+    const navigateTo = useNavigate();
 
     useEffect(() => {
-        if (sessionStorage.getItem('token')) {
+        if (getToken() !== null && getToken()?.startsWith('Basic ')) {
             void fetchAllDepartments(departments, setDepartments, setError);
         } else {
-            navigator('/login')
+            navigateTo('/login')
         }
     }, []);
 
     const handleUpdateDepartment = (department: Department) => {
-        navigator(`/edit-department/${department.id}`, {state: department});
+        navigateTo(`/edit-department/${department.id}`, {state: department});
     };
 
 
@@ -36,7 +37,7 @@ const ListDepartmentComponent = () : React.ReactNode => {
                     setDepartments(prevState => {
                         return prevState.filter(dept => dept.id !== department.id);
                     })
-                    navigator(`/departments`);
+                    navigateTo(`/departments`);
                 } else {
                     setError(`Error occurred while deleting department with ID: ${department.id}, status: ${axiosResponse.status}`);
                 }

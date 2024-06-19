@@ -1,11 +1,14 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {LoginDetails} from "../types/LoginDetails.ts";
 import {login, storeToken} from "../services/AuthorisationService.ts";
+import {LoginContext} from "../App.tsx";
 
 const LoginComponent = () => {
 
     const [username, setUsername]: [string, React.Dispatch<React.SetStateAction<string>>] = useState<string>('');
     const [password, setPassword]: [string, React.Dispatch<React.SetStateAction<string>>] = useState<string>('');
+
+    const {setIsUserLoggedIn} = useContext(LoginContext);
 
     const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -17,6 +20,7 @@ const LoginComponent = () => {
                 const response = await login(loginObject);
                 if (response.status === 204) {
                     storeToken(`Basic ${window.btoa(loginObject.usernameOrEmail.concat(":", loginObject.password))}`);
+                    setIsUserLoggedIn(true);
                 }
             } catch (error){
                 console.log(error);

@@ -4,6 +4,8 @@ import {useNavigate} from "react-router-dom";
 import {Employee} from "../types/Employee.ts";
 import axios, {CancelTokenSource} from "axios";
 import {getToken} from "../services/AuthorisationService.ts";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
 
 export function ListEmployeeComponent() : React.ReactNode {
 
@@ -45,6 +47,7 @@ export function ListEmployeeComponent() : React.ReactNode {
     };
 
     const deleteEmployee = async (id: number | undefined): Promise<void> => {
+
         const axiosResponse = await deleteEmployeeById(`${id}`);
         if (axiosResponse.status === 204) {
             setEmployees(prevState => {
@@ -56,6 +59,9 @@ export function ListEmployeeComponent() : React.ReactNode {
         }
     };
 
+
+    dayjs.extend(utc);
+
     let renderEmployeesTable = <table className={"table table-striped table-hover table-bordered"}>
         <thead>
         <tr className={`text-center`}>
@@ -64,6 +70,7 @@ export function ListEmployeeComponent() : React.ReactNode {
             <th>Last Name</th>
             <th>Email</th>
             <th>Department ID</th>
+            <th>Employment Start Date</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -78,6 +85,7 @@ export function ListEmployeeComponent() : React.ReactNode {
                         <td>{employeeNameArray[1]}</td>
                         <td>{emp.email}</td>
                         <td>{emp.departmentId}</td>
+                        <td>{dayjs(emp.createdDate).utc(false).format(`MMM-DD-YYYY HH:mm:ss`)}</td>
                         <td>
                             <button
                                 className={`btn btn-info ms-2`}

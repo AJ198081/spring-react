@@ -2,7 +2,9 @@ export interface Employee {
     fullName: string;
     id?: number;
     email: string;
-    departmentId: number
+    departmentId: number;
+    createdDate: string;
+    lastUpdatedDate: string;
 }
 
 export interface EmployeeError {

@@ -1,6 +1,7 @@
 package dev.aj.dto;
 
 import jakarta.validation.constraints.Email;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,6 @@ public class EmployeeDto {
     @Email
     private String email;
     private Long departmentId;
+    private Instant createdDate;
+    private Instant lastUpdatedDate;
 }

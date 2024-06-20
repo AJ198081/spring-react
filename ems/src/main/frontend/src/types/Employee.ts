@@ -5,6 +5,7 @@ export interface Employee {
     departmentId: number;
     createdDate?: string;
     lastUpdatedDate?: string;
+    createdBy?: string;
 }
 
 export interface EmployeeError {

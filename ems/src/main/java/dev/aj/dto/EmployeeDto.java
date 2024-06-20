@@ -21,4 +21,5 @@ public class EmployeeDto {
     private Long departmentId;
     private Instant createdDate;
     private Instant lastUpdatedDate;
+    private String createdBy;
 }

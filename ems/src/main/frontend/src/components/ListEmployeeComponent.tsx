@@ -71,6 +71,7 @@ export function ListEmployeeComponent() : React.ReactNode {
             <th>Email</th>
             <th>Department ID</th>
             <th>Employment Start Date</th>
+            <th>Created By</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -78,14 +79,14 @@ export function ListEmployeeComponent() : React.ReactNode {
         {
            employees !== null && employees.length !== 0 && employees.map((emp) => {
                     const employeeNameArray = emp.fullName.split(" ");
-
                     return <tr className={`text-center`} key={emp.id}>
                         <td>{emp.id}</td>
                         <td>{employeeNameArray[0]}</td>
                         <td>{employeeNameArray[1]}</td>
                         <td>{emp.email}</td>
                         <td>{emp.departmentId}</td>
-                        <td>{dayjs(emp.createdDate).utc(false).format(`MMM-DD-YYYY HH:mm:ss`)}</td>
+                        <td>{dayjs(emp.createdDate).utc(true).format(`MMM-DD-YYYY HH:mm:ss`)}</td>
+                        <td>{emp.createdBy}</td>
                         <td>
                             <button
                                 className={`btn btn-info ms-2`}

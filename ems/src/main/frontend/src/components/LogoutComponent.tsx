@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {removeToken} from "../services/AuthorisationService.ts";
+import {logout, removeToken} from "../services/AuthorisationService.ts";
 import {LoginContext} from "../App.tsx";
 
 const LogoutComponent = () : React.ReactNode => {
@@ -12,6 +12,7 @@ const LogoutComponent = () : React.ReactNode => {
         if (isUserLoggedIn) {
             setIsUserLoggedIn(prevState => !prevState);
             removeToken();
+            void logout();
         }
         navigateFunction('/login');
     };

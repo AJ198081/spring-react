@@ -25,7 +25,6 @@ public class JwtTokenService {
     @Value("${app.jwt-expiration-minutes}")
     private int expiration;
 
-
     public String generateToken(Authentication authentication) {
 
         String username = authentication.getName();
@@ -44,8 +43,7 @@ public class JwtTokenService {
 
     public String getUsernameFromToken(String token) throws UserPrincipalNotFoundException {
         try {
-            return getTokenPayload(token)
-                    .getSubject();
+            return getTokenPayload(token).getSubject();
         } catch (JwtException e) {
             throw new UserPrincipalNotFoundException("Request doesn't carry a valid JWT");
         }
@@ -53,10 +51,11 @@ public class JwtTokenService {
 
     public boolean validateToken(String token) {
         try {
-            Instant expirationInstant = getTokenPayload(token)
+            return getTokenPayload(token)
                     .getExpiration()
-                    .toInstant();
-            return expirationInstant.isAfter(Instant.now());
+                    .toInstant()
+                    .isAfter(Instant.now());
+
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }

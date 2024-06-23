@@ -2,6 +2,8 @@ package dev.aj.config.security;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.aj.config.security.service.JwtAuthenticationEntryPoint;
+import dev.aj.config.security.service.JwtAuthenticationFilter;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +20,13 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -36,39 +40,43 @@ public class SecurityConfig {
     public static final String SUPERUSER = "superuser";
     public static final String USER = "user";
     private final ObjectMapper objectMapper;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain addSecurityFilters(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity.authorizeHttpRequests(customizer -> customizer
-                                   .requestMatchers("/user/login")
-                                        .permitAll()
+                                   .requestMatchers("/user/login", "/user/jwt_login", "/login", "logout")
+                                   .permitAll()
                                    .requestMatchers(HttpMethod.GET, "/employees/**", "/departments/**")
-                                        .hasAnyRole(USER, ADMIN, SUPERUSER)
+                                   .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/employees", "/departments")
-                                        .hasAnyRole(ADMIN, SUPERUSER)
+                                   .hasAnyRole(ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.PUT, "/employees/*", "/departments/*")
-                                        .hasAnyRole(USER, ADMIN, SUPERUSER)
+                                   .hasAnyRole(USER, ADMIN, SUPERUSER)
                                    .requestMatchers(HttpMethod.POST, "/user/register")
-                                        .hasRole(SUPERUSER)
+                                   .hasRole(SUPERUSER)
                                    .anyRequest()
-                                        .authenticated()
+                                   .authenticated()
                            )
                            .cors(corsCustomizer -> {
                                CorsConfigurationSource source = request -> {
                                    CorsConfiguration configuration = new CorsConfiguration();
-                                   configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+                                   configuration.setAllowedOrigins(List.of("http://localhost:5173"));
                                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT"));
-                                   configuration.setAllowedHeaders(Arrays.asList("*"));
+                                   configuration.setAllowedHeaders(List.of("*"));
                                    configuration.setAllowCredentials(true);
                                    return configuration;
                                };
                                corsCustomizer.configurationSource(source);
                            })
-                           .csrf(customizer -> customizer.disable())
+                           .csrf(AbstractHttpConfigurer::disable)
                            .httpBasic(Customizer.withDefaults())
                            .formLogin(Customizer.withDefaults())
+                           .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                            .sessionManagement(customizer -> customizer.maximumSessions(1))
+                           .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                            .build();
     }
 
@@ -77,7 +85,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
-        ProviderManager providerManager = new ProviderManager(Arrays.asList(daoAuthenticationProvider));
+        ProviderManager providerManager = new ProviderManager(List.of(daoAuthenticationProvider));
         providerManager.setEraseCredentialsAfterAuthentication(false);
         return providerManager;
     }

@@ -1,23 +1,25 @@
 import React, {useEffect, useState} from "react";
 import {deleteEmployeeById, listEmployees} from "../services/EmployeeService.ts";
 import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 import {Employee} from "../types/Employee.ts";
 import axios, {CancelTokenSource} from "axios";
 import {getToken} from "../services/AuthorisationService.ts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 
-export function ListEmployeeComponent() : React.ReactNode {
+export function ListEmployeeComponent(): React.ReactNode {
 
     const [employees, setEmployees]: [Employee[], (value: (((prevState: Employee[]) => Employee[]) | Employee[])) => void] = useState<Employee[]>([]);
     const [loading, setLoading]: [boolean, (value: ((prevState: boolean) => boolean) | boolean) => void] = useState(false);
 
     const navigator = useNavigate();
 
-    useEffect( () => {
+    useEffect(() => {
         const cancelTokenSource = axios.CancelToken.source();
 
-        if (getToken() !== null && getToken()?.startsWith('Basic ')) {
+        if (Cookies.get("accessToken") || (getToken() !== null && (getToken()?.startsWith('Basic ') || getToken()?.startsWith(`Bearer `)))) {
+
             void fetchEmployees(cancelTokenSource);
         } else {
             navigator('/login');
@@ -77,7 +79,7 @@ export function ListEmployeeComponent() : React.ReactNode {
         </thead>
         <tbody>
         {
-           employees !== null && employees.length !== 0 && employees.map((emp) => {
+            employees !== null && employees.length !== 0 && employees.map((emp) => {
                     const employeeNameArray = emp.fullName.split(" ");
                     return <tr className={`text-center`} key={emp.id}>
                         <td>{emp.id}</td>

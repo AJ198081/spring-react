@@ -17,7 +17,7 @@ const ListDepartmentComponent = () : React.ReactNode => {
     const navigateTo = useNavigate();
 
     useEffect(() => {
-        if (getToken() !== null && getToken()?.startsWith('Basic ')) {
+        if (getToken() !== null && (getToken()?.startsWith('Basic ')) || getToken()?.startsWith('Bearer ')) {
             void fetchAllDepartments(departments, setDepartments, setError);
         } else {
             navigateTo('/login')

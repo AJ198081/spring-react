@@ -1,18 +1,8 @@
 import axios, {AxiosRequestConfig, AxiosResponse, CancelTokenSource, InternalAxiosRequestConfig} from "axios";
 import {Employee} from "../types/Employee.ts";
-import {getToken} from "./AuthorisationService.ts";
 import {useNavigate} from "react-router-dom";
 
 const REST_EMPLOYEE_API_URL = "http://localhost:8080/employees";
-
-axios.interceptors.request.use((config) => {
-    if (getToken()) {
-        config.headers['Authorization'] = getToken();
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error)
-})
 
 export const listEmployees = async (cancelTokenSource: CancelTokenSource): Promise<AxiosResponse<Employee[], InternalAxiosRequestConfig>> => {
     return axios.get(REST_EMPLOYEE_API_URL.concat("/all"), {cancelToken: cancelTokenSource.token})

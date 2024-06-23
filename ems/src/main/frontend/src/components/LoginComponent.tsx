@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import {LoginDetails} from "../types/LoginDetails.ts";
-import {login, storeToken} from "../services/AuthorisationService.ts";
+import {jwtLogin, storeToken} from "../services/AuthorisationService.ts";
 import {LoginContext} from "../App.tsx";
 
 const LoginComponent = () => {
@@ -13,16 +13,24 @@ const LoginComponent = () => {
     const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const loginObject : LoginDetails = {usernameOrEmail: username, password} as LoginDetails;
+        const loginObject: LoginDetails = {usernameOrEmail: username, password} as LoginDetails;
 
         (async () => {
             try {
-                const response = await login(loginObject);
+                const response = await jwtLogin(loginObject);
+                if (response.status === 200) {
+                    const jwt = response.data;
+                    let token = `${jwt.tokenType} ${jwt.accessToken}`;
+                    storeToken(token);
+                    setIsUserLoggedIn(true);
+                }
+
+                /*const response = await jwtLogin(loginObject);
                 if (response.status === 204) {
                     storeToken(`Basic ${window.btoa(loginObject.usernameOrEmail.concat(":", loginObject.password))}`);
                     setIsUserLoggedIn(true);
-                }
-            } catch (error){
+                }*/
+            } catch (error) {
                 console.log(error);
             }
         })();

@@ -48,7 +48,7 @@ public class Employee {
     @Column(unique = true, nullable = false, name = "email_address")
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 

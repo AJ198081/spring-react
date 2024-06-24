@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.Resolvable;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.core.ResolvableType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
@@ -34,11 +34,6 @@ public class EmsApp implements ApplicationContextAware {
 
     public static void main(String[] args) {
         SpringApplication.run(EmsApp.class, args);
-    }
-
-    @Bean(name = "encoder")
-    public PasswordEncoder bcryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @PostConstruct

@@ -5,5 +5,5 @@ export interface LoginDetails {
 
 export interface JwtToken {
     accessToken: string,
-    tokenType: string
+    tokenType: "Bearer"
 }

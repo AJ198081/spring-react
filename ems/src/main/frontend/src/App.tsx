@@ -31,7 +31,8 @@ export const LoginContext: React.Context<{
     setIsUserLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
 }>({
     isUserLoggedIn: false,
-    setIsUserLoggedIn: () => {}
+    setIsUserLoggedIn: () => {
+    }
 })
 
 function App() {

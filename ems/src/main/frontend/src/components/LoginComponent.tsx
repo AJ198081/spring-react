@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {LoginDetails} from "../types/LoginDetails.ts";
+import {JwtToken, LoginDetails} from "../types/LoginDetails.ts";
 import {jwtLogin, storeToken} from "../services/AuthorisationService.ts";
 import {LoginContext} from "../App.tsx";
 
@@ -19,7 +19,7 @@ const LoginComponent = () => {
             try {
                 const response = await jwtLogin(loginObject);
                 if (response.status === 200) {
-                    const jwt = response.data;
+                    const jwt : JwtToken = response.data;
                     let token = `${jwt.tokenType} ${jwt.accessToken}`;
                     storeToken(token);
                     setIsUserLoggedIn(true);

@@ -12,6 +12,8 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProviderImpl", modifyOnCreate = false, auditorAwareRef = "auditorAwareRef")
@@ -32,5 +34,11 @@ public class AppConfig {
                      .findFirst()
                      .<AuditorAware<String>>map(securityUser -> () -> Optional.of(securityUser.getEmail()))
                      .orElseGet(() -> () -> Optional.of("admin"));
+    }
+
+
+    @Bean(name = "encoder")
+    public PasswordEncoder bcryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

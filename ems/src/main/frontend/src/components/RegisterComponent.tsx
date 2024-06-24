@@ -15,7 +15,7 @@ const RegisterComponent = (): React.ReactNode => {
         setRoles(rolesArray);
     };
 
-    const handleRegisteration = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleRegistration = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         const userDetails  = {name, username, password, email, roles} as RegisterationDetails
@@ -106,7 +106,7 @@ const RegisterComponent = (): React.ReactNode => {
                                     </div>
                                 </div>
                                 <button className={`btn btn-primary col-md-3 offset-4`} type={`submit`}
-                                        onClick={e => handleRegisteration(e)}>Submit
+                                        onClick={e => handleRegistration(e)}>Submit
                                 </button>
                             </form>
                         </div>
